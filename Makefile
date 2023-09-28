@@ -1,8 +1,8 @@
 CC = gcc
-CFLAGS = -I./include
+CFLAGS = -I./include -g
 SOURCES = $(wildcard src/*.c)
 OBJECTS = $(SOURCES:.c=.o)
-EXECUTABLE = arraylistrunner
+EXECUTABLE = hashmaprunner
 
 all: $(EXECUTABLE)
 
