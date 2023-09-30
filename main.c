@@ -56,6 +56,7 @@ int main(int argc, char **argv)
     long key1 = 100;
     long key2 = 200;
     long key3 = 10000000;
+    long key4 = 175;
 
     int grade1 = 100;
     int grade2 = 97;
@@ -64,61 +65,41 @@ int main(int argc, char **argv)
 
     mapPut(&map, &key1, "Charles");
     mapPut(&map, &key2, "Something");
-    mapPut(&map, &key2, "Nothing");
     mapPut(&map, &key3, "Collision");
+    mapPut(&map, &key4, "Nothing");
+    mapReplace(&map, &key4, "Howdy");
 
     mapPut(&strMap, "James", &grade1);
     mapPut(&strMap, "Juan", &grade2);
     mapPut(&strMap, "Jacob", &grade3);
     mapPut(&strMap, "Joe", &grade4);
 
+    HashMap *clone = mapClone(map);
+    mapRemove(&clone, &key4);
+
     printf("Long Key Map:\n");
     printf("%s\n", (mapGet(map, &key1) != NULL) ? (char *)mapGet(map, &key1) : "NULL");
     printf("%s\n", (mapGet(map, &key2) != NULL) ? (char *)mapGet(map, &key2) : "NULL");
     printf("%s\n", (mapGet(map, &key3) != NULL) ? (char *)mapGet(map, &key3) : "NULL");
+    printf("%s\n", (mapGet(map, &key4) != NULL) ? (char *)mapGet(map, &key4) : "NULL");
+    printf("%lu\n", mapSize(map));
+
+    printf("\nClone Key Map:\n");
+    printf("%s\n", (mapGet(clone, &key1) != NULL) ? (char *)mapGet(clone, &key1) : "NULL");
+    printf("%s\n", (mapGet(clone, &key2) != NULL) ? (char *)mapGet(clone, &key2) : "NULL");
+    printf("%s\n", (mapGet(clone, &key3) != NULL) ? (char *)mapGet(clone, &key3) : "NULL");
+    printf("%s\n", (mapGet(clone, &key4) != NULL) ? (char *)mapGet(clone, &key4) : "NULL");
+    printf("%lu\n", mapSize(clone));
 
     printf("\nString Key Map:\n");
     printf("%d\n", (mapGet(strMap, "James") != NULL) ? *(int *)mapGet(strMap, "James") : -1);
     printf("%d\n", (mapGet(strMap, "Juan") != NULL) ? *(int *)mapGet(strMap, "Juan") : -1);
     printf("%d\n", (mapGet(strMap, "Jacob") != NULL) ? *(int *)mapGet(strMap, "Jacob") : -1);
     printf("%d\n", (mapGet(strMap, "Joe") != NULL) ? *(int *)mapGet(strMap, "Joe") : -1);
-
-    printf("String Map Contains JoeMama: %s\n", (mapGet(strMap, "JoeMama")) ? "Yes" : "No");
-
-    /* 
-    ArrayList *bucket = (ArrayList *)listGet(map->buckets, 6);
-    Pair *pair = (Pair *)listGet(bucket, 0); 
-    if(pair == NULL)
-        printf("%s\n", "NULL");
-    else printf("%s\n", (char *)pair->value);
-
-    mapGet(map, &key2);
-    */
-
-    /*
-    mapPut(&map, (int *)100, (char *)"Zach");
-    mapPut(&map, (int *)0, (char *)"Jason");
-    mapPut(&map, (int *)102, (char *)"Zip");
-    mapPut(&map, (int *)63, (char *)"John");
-    mapPut(&map, (int *)83, (char *)"Jacob");
-    mapPut(&map, (int *)30, (char *)"Nick");
-    */
-
-    //char *name = (char *)malloc(100 * sizeof(char));
-    
-
-    //printf("%s\n", (char *)mapGet(map, &key1));
-    //printf("%s\n", (char *)mapGet(map, &key2));
-
-    //printf("%s\n", name);
-
-    //char *name = (char *)mapGet(map, (long *)100);
-    //printf("%s\n", name);
-
-    //mapRemove(&map, (long *)30);
-
-    //printMap(map);
+    printf("%lu\n", mapSize(strMap));
 
     freeMap(&map);
+    freeMap(&strMap);
+    freeMap(&clone);
     return 0;
 }
