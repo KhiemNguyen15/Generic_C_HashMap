@@ -46,6 +46,23 @@ HashMap *newMap = mapClone(map);
 * `toClone`: A pointer to the hash map you want to clone.
 * Returns a pointer to the newly created hash map.
 
+## Function Pointers
+
+### Equality Function
+```c
+typedef bool (*EqualityFunction)(const void *, const void *);
+```
+
+* A function to compare elements for equality.
+
+### Convert Function
+
+```c
+typedef long (*ConvertFunction)(const void *key);
+```
+
+* A function to convert keys into a long integer for hashing.
+
 ## Basic Operations
 
 ### Putting a Key-Value Pair
@@ -298,27 +315,26 @@ Below is an example of how to use the hash map library:
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "hashmap.h"
+#include <hashmap.h>
 
-// Define custom convert and compare functions for keys
-long customConvert(const void *key) 
+// Function that converts the key to a long integer for hashing
+long convertKey(const void *key) 
 {
-    // Custom key to hash code conversion logic
-    // Modify as needed
     return (long)(*(int *)key);
 }
 
-bool customCompare(const void *a, const void *b) 
+// Function to compare the keys of each key-value pair
+bool compareKeys(const void *a, const void *b) 
 {
-    // Custom key equality comparison logic
-    // Modify as needed
-    return (*(int *)a == *(int *)b);
+    Pair pairA = *(Pair *)a;
+    Pair pairB = *(Pair *)b;
+
+    return *(int *)pairA.key == *(int *)pairB.key;
 }
 
-int main() 
-{
+int main() {
     // Create a hash map with custom key handling
-    HashMap *map = createMap(10, customConvert, customCompare);
+    HashMap *map = createMap(10, convertKey, compareKeys);
 
     // Populate the hash map
     int key1 = 42;
@@ -329,19 +345,57 @@ int main()
     int *retrievedValue = (int *)mapGet(map, &key1);
     if (retrievedValue != NULL) 
     {
-        printf("Retrieved value: %d\n", *retrievedValue);
+        printf("Retrieved value for key1: %d\n", *retrievedValue);
     } else 
     {
-        printf("Key not found.\n");
+        printf("Key1 not found.\n");
     }
 
     // Check if a key exists
-    bool keyExists = mapContainsKey(map, &key1);
-    printf("Key exists: %s\n", keyExists ? "true" : "false");
+    bool key1Exists = mapContainsKey(map, &key1);
+    printf("Key1 exists: %s\n", key1Exists ? "true" : "false");
+
+    // Add more key-value pairs
+    int key2 = 55;
+    int value2 = 200;
+    int key3 = 30;
+    int value3 = 300;
+
+    mapPut(&map, &key2, &value2);
+    mapPut(&map, &key3, &value3);
 
     // Get all keys and values
     ArrayList *keys = mapGetKeys(map);
     ArrayList *values = mapGetValues(map);
+
+    printf("\nAll keys in the map:\n");
+    for (int i = 0; i < listSize(keys); i++) 
+    {
+        int *currentKey = (int *)listGet(keys, i);
+        printf("%d\n", *currentKey);
+    }
+
+    printf("\nAll values in the map:\n");
+    for (int i = 0; i < listSize(values); i++) 
+    {
+        int *currentValue = (int *)listGet(values, i);
+        printf("%d\n", *currentValue);
+    }
+
+    // Update a value
+    int newValueForKey2 = 999;
+    mapReplace(&map, &key2, &newValueForKey2);
+
+    printf("\nUpdated value for key2: %d\n", *(int *)mapGet(map, &key2));
+
+    // Remove a key-value pair
+    mapRemove(&map, &key3);
+    bool key3Exists = mapContainsKey(map, &key3);
+    printf("Key3 exists after removal: %s\n", key3Exists ? "true" : "false");
+
+    // Check if the map is empty
+    bool isEmpty = mapIsEmpty(map);
+    printf("Is the map empty: %s\n", isEmpty ? "true" : "false");
 
     // Free memory
     freeMap(&map);
@@ -374,19 +428,19 @@ Follow these steps to compile:
 
 3. **Compile the Program:** Run the `make` command to compile the program. The Makefile will automatically locate source files in the `src` directory, `include` header files from the include directory, and produce an executable.
 
-```bash
-make
-```
+    ```bash
+    make
+    ```
 
-If you encounter any errors during compilation, make sure you have met the prerequisites and resolved any issues.
+    If you encounter any errors during compilation, make sure you have met the prerequisites and resolved any issues.
 
 4. **Clean Up (Optional):** To clean the build directory and remove compiled files and executables, you can use the following command:
 
-```bash
-make clean
-```
+    ```bash
+    make clean
+    ```
 
-This will delete all generated object files and the executable.
+    This will delete all generated object files and the executable.
 
 ## Compilation Steps Without Make
 
@@ -398,12 +452,12 @@ Follow these steps to compile:
 
 3. **Compile the Program:** Use the following `gcc` command to compile your program:
 
-```bash
-gcc -I./include -o hashmaprunner main.c src/data.c src/arraylist.c src/pair.c src/hashmap.c
-```
+    ```bash
+    gcc -I./include -o hashmaprunner main.c src/data.c src/arraylist.c src/pair.c src/hashmap.c
+    ```
 
-Replace `hashmaprunner` with the desired executable name if you wish to do so.
+    Replace `hashmaprunner` with the desired executable name if you wish to do so.
 
-If you encounter any errors during compilation, make sure you have met the prerequisites and resolved any issues.
+    If you encounter any errors during compilation, make sure you have met the prerequisites and resolved any issues.
 
-Replace `main.c` with the actual name of your main source file if it's different. Additionally, make sure you adjust the compilation command as needed to include any other source files in your project.
+    Replace `main.c` with the actual name of your main source file if it's different. Additionally, make sure you adjust the compilation command as needed to include any other source files in your project.
