@@ -7,6 +7,7 @@
 #include "hashmap.h"
 
 #define HASHCONSTANT 0.6180339887
+#define GETBUCKET size_t hashCode = hash(map, key, map->convert); ArrayList *bucket = listGet(map->buckets, hashCode);
 
 #define MALLOCCHECK(ptr) do\
 {\
@@ -64,9 +65,8 @@ size_t hash(const HashMap *map, const void *key, ConvertFunction convert)
 void mapPut(HashMap **mapPtr, void *key, void *value)
 { 
     HashMap *map = *mapPtr;
-    size_t hashCode = hash(map, key, map->convert);
 
-    ArrayList *bucket = listGet(map->buckets, hashCode);
+    GETBUCKET
     Pair *newPair = createPair(key, value); 
     int index = listIndexOf(bucket, newPair, map->comparePairKeys);
     if(index != -1)
@@ -81,9 +81,7 @@ void mapPut(HashMap **mapPtr, void *key, void *value)
 
 void *mapGet(const HashMap *map, void *key)
 {
-    size_t hashCode = hash(map, key, map->convert);
-
-    ArrayList *bucket = listGet(map->buckets, hashCode);
+    GETBUCKET
     Pair *toFind = createPair(key, NULL);
     int index = listIndexOf(bucket, toFind, map->comparePairKeys);
     if(index != -1)
@@ -98,15 +96,21 @@ void *mapGet(const HashMap *map, void *key)
 void mapRemove(HashMap **mapPtr, void *key)
 {
     HashMap *map = *mapPtr;
-    size_t hashCode = hash(map, key, map->convert);
 
-    ArrayList *bucket = listGet(map->buckets, hashCode);
+    GETBUCKET
     Pair *toFind = createPair(key, NULL); 
     int index = listIndexOf(bucket, toFind, map->comparePairKeys);
     if(index != -1)
     {
         listRemove(&bucket, index);
     }
+}
+
+bool mapContains(const HashMap *map, void *key)
+{
+    GETBUCKET
+    Pair *toFind = createPair(key, NULL);
+    return listContains(bucket, toFind, map->comparePairKeys);
 }
 
 void freeMap(HashMap **mapPtr)

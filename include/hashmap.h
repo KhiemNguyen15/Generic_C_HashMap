@@ -22,6 +22,8 @@ void mapPut(HashMap **mapPtr, void *key, void *value);
 void *mapGet(const HashMap *map, void *key);
 void mapRemove(HashMap **mapPtr, void *key);
 
+bool mapContains(const HashMap *map, void *key);
+
 void freeMap(HashMap **mapPtr);
 
 #endif
