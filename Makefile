@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -I./include -g
+CFLAGS = -I./include
 SOURCES = $(wildcard src/*.c)
 OBJECTS = $(SOURCES:.c=.o)
 EXECUTABLE = hashmaprunner
