@@ -332,7 +332,8 @@ bool compareKeys(const void *a, const void *b)
     return *(int *)pairA.key == *(int *)pairB.key;
 }
 
-int main() {
+int main() 
+{
     // Create a hash map with custom key handling
     HashMap *map = createMap(10, convertKey, compareKeys);
 
