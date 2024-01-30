@@ -2,11 +2,10 @@
 
 #include "pair.h"
 
-Pair *createPair(void *key, void *value)
-{
-    Pair *newPair = (Pair *)malloc(sizeof(Pair));
-    newPair->key = key;
-    newPair->value = value;
+Pair *createPair(void *key, void *value) {
+  Pair *newPair = (Pair *)malloc(sizeof(Pair));
+  newPair->key = key;
+  newPair->value = value;
 
-    return newPair;
+  return newPair;
 }

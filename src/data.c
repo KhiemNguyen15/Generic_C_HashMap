@@ -2,15 +2,11 @@
 
 #include "data.h"
 
-Data createData(void *val)
-{
-    Data *data = (Data *)malloc(sizeof(Data));
-    data->val = val;
+Data createData(void *val) {
+  Data *data = (Data *)malloc(sizeof(Data));
+  data->val = val;
 
-    return *data;
+  return *data;
 }
 
-void *getData(Data data)
-{
-    return data.val;
-}
+void *getData(Data data) { return data.val; }

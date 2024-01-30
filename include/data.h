@@ -3,9 +3,8 @@
 
 typedef struct Data Data;
 
-struct Data
-{
-    void *val;
+struct Data {
+  void *val;
 };
 
 Data createData(void *val);
